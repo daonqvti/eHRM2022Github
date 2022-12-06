@@ -1,9 +1,10 @@
 package com.vti.controller;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.function.Function;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -31,20 +32,33 @@ public class AccountController {
 	private IAccountService accountService;
 
 	@GetMapping()
-	public ResponseEntity<?> getAllAccount() {
-		List<Account> entities = accountService.getAllAccount();
+	public ResponseEntity<?> getAllAccount(Pageable pageable) {
+//		List<Account> entities = accountService.getAllAccount();
+//
+//		List<AccontDto> dtos = new ArrayList<>();
+//
+//		// convert entities --> dtos
+//		for (Account account : entities) {
+//			AccontDto dto = new AccontDto(account.getId(), account.getEmail(), account.getUsername(),
+//					account.getFullname(), account.getDepartment().getName(),
+//					account.getPosition().getName().toString(), account.getCreateDate());
+//			dtos.add(dto);
+//		}
 
-		List<AccontDto> dtos = new ArrayList<>();
+		Page<Account> entities = accountService.getAllAccount(pageable);
 
 		// convert entities --> dtos
-		for (Account account : entities) {
-			AccontDto dto = new AccontDto(account.getId(), account.getEmail(), account.getUsername(),
-					account.getFullname(), account.getDepartment().getName(),
-					account.getPosition().getName().toString(), account.getCreateDate());
-			dtos.add(dto);
-		}
+		Page<AccontDto> dtoPage = entities.map(new Function<Account, AccontDto>() {
 
-		return new ResponseEntity<>(dtos, HttpStatus.OK);
+			@Override
+			public AccontDto apply(Account account) {
+				AccontDto dto = new AccontDto(account.getId(), account.getEmail(), account.getUsername(),
+						account.getFullname(), account.getDepartment().getName(),
+						account.getPosition().getName().toString(), account.getCreateDate());
+				return dto;
+			}
+		});
+		return new ResponseEntity<>(dtoPage, HttpStatus.OK);
 	}
 
 	@GetMapping(value = "/{id}")

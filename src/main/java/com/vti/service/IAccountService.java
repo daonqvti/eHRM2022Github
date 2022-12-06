@@ -1,13 +1,14 @@
 package com.vti.service;
 
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import com.vti.entity.Account;
 import com.vti.form.AccountFormForCreating;
 import com.vti.form.AccountFormForUpdating;
 
 public interface IAccountService {
-	public List<Account> getAllAccount();
+	public Page<Account> getAllAccount(Pageable pageable);
 
 	public Account getAccountById(short id);
 

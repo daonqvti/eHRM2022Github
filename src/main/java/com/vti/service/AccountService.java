@@ -1,8 +1,8 @@
 package com.vti.service;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.vti.entity.Account;
@@ -25,9 +25,9 @@ public class AccountService implements IAccountService {
 	private IPossitionRepository possitionRepository;
 
 	@Override
-	public List<Account> getAllAccount() {
+	public Page<Account> getAllAccount(Pageable pageable) {
 		// TODO Auto-generated method stub
-		return accountRepository.findAll();
+		return accountRepository.findAll(pageable);
 	}
 
 	@Override
